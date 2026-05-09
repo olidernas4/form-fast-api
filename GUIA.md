@@ -95,8 +95,12 @@ Explicación (línea por línea, por bloques):
 Base URL (si corres local):
 - `http://127.0.0.1:8000`
 
+> En Postman, selecciona el método HTTP, pon la URL, elige `Body` > `raw` > `JSON` y agrega el JSON de ejemplo.
+
 ### Crear (POST)
 - URL: `POST /formularios`
+- Headers:
+  - `Content-Type: application/json`
 - Body (raw JSON):
 ```json
 {
@@ -106,6 +110,15 @@ Base URL (si corres local):
   "edad": 28,
   "peso": 75.5,
   "genero": "M"
+}
+```
+
+### Ejemplo de JSON mínimo válido para crear
+```json
+{
+  "nombre": "Ana",
+  "apellido": "Gómez",
+  "genero": "F"
 }
 ```
 
@@ -120,13 +133,33 @@ Base URL (si corres local):
 
 ### Editar (PUT)
 - URL: `PUT /formularios/1`
-- Body (raw JSON) (puedes mandar solo lo que cambias):
+- Headers:
+  - `Content-Type: application/json`
+- Body (raw JSON):
 ```json
 {
   "edad": 29,
   "peso": 76.2
 }
 ```
+
+### Ejemplo de JSON completo para editar
+```json
+{
+  "nombre": "Carlos",
+  "apellido": "Ruiz",
+  "email": "carlos.nuevo@mail.com",
+  "edad": 29,
+  "peso": 76.2,
+  "genero": "M"
+}
+```
+
+### Notas importantes
+- Para `genero`, usa solo un carácter: `"M"` o `"F"`.
+- Si envías un `PUT` con un JSON vacío, la API responde:
+  - `{"mensaje": "Nada para actualizar"}`
+- El campo `email` es opcional y, si lo envías, debe tener formato válido.
 
 ### Eliminar (DELETE)
 - URL: `DELETE /formularios/1`
@@ -141,4 +174,78 @@ Levantar servidor:
 
 Docs (Swagger):
 - `http://127.0.0.1:8000/docs`
-`http://127.0.0.1:8000/redoc`
+- `http://127.0.0.1:8000/redoc`
+
+## 6) Git
+
+Esta sección explica cómo colaborar con un compañero usando Git y ramas, para evitar conflictos de código.
+
+### 6.1) Recomendación general
+
+- Cada persona debe trabajar en su propia rama, no directamente en `main`.
+- Usen nombres claros para las ramas: por ejemplo `feature/crear-formulario`, `feature/editar-formulario`, `fix/email-validacion`.
+- Antes de empezar a trabajar, siempre actualiza la rama `main` del repositorio remoto.
+
+### 6.2) Paso a paso para trabajar sin conflictos
+
+1. Clona el repositorio una sola vez:
+   - `git clone <URL-del-repositorio>`
+2. Entra a la carpeta del proyecto:
+   - `cd mi_proyecto_fastapi`
+3. Actualiza `main` antes de crear tu rama:
+   - `git checkout main`
+   - `git pull origin main`
+4. Crea una rama nueva para tu cambio:
+   - `git checkout -b feature/nombre-de-tu-cambio`
+5. Trabaja en tu rama y haz cambios en el código.
+6. Guarda tus cambios con commits pequeños y claros:
+   - `git add .`
+   - `git commit -m "Agregar ejemplo JSON de Postman"`
+7. Antes de subir tu rama, actualiza `main` y rebase o merge:
+   - `git checkout main`
+   - `git pull origin main`
+   - `git checkout feature/nombre-de-tu-cambio`
+   - `git rebase main`  (o `git merge main` si prefieres)
+
+### 6.3) Subir tu rama y crear un Pull Request
+
+1. Sube tu rama al remoto:
+   - `git push origin feature/nombre-de-tu-cambio`
+2. En la plataforma de Git (GitHub/GitLab/Bitbucket):
+   - Crea un Pull Request (PR) o Merge Request (MR) desde tu rama hacia `main`.
+   - Describe qué cambiaste y por qué.
+3. Tu compañero revisa el PR y aprueba los cambios.
+4. Una vez aprobado, se puede fusionar a `main`.
+
+### 6.4) Cómo evitar conflictos al hacer `pull` o `merge`
+
+- Siempre actualiza `main` con `git pull origin main` antes de empezar una nueva rama.
+- Evita editar exactamente las mismas líneas que tu compañero.
+- Si hay conflictos, Git mostrará los archivos con conflictos.
+  - Abre el archivo y busca las marcas `<<<<<<<`, `=======`, `>>>>>>>`.
+  - Decide cuál cambio conservar o combina ambos cambios.
+  - Luego haz:
+    - `git add <archivo-con-conflicto>`
+    - `git rebase --continue`  (si usaste rebase)
+    - o `git commit`  (si usaste merge)
+- Finalmente, sube los cambios corregidos:
+  - `git push origin feature/nombre-de-tu-cambio`
+
+### 6.5) Ejemplo rápido de flujo colaborativo
+
+1. Yo actualizo `main`:
+   - `git checkout main`
+   - `git pull origin main`
+2. Creo mi rama:
+   - `git checkout -b feature/agregar-guia-git`
+3. Hago mis cambios y commit:
+   - `git add GUIA.md`
+   - `git commit -m "Agregar sección Git a la guía"`
+4. Actualizo `main` otra vez antes de enviar:
+   - `git checkout main`
+   - `git pull origin main`
+   - `git checkout feature/agregar-guia-git`
+   - `git rebase main`
+5. Subo la rama y creo el Pull Request.
+
+Con este flujo, cada uno trabaja en su propia rama y se reduce mucho el riesgo de conflictos.
