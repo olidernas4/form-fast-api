@@ -1,10 +1,20 @@
-from fastapi import FastAPI, HTTPException  # FastAPI = crear API, HTTPException = lanzar errores (400/404)
+from fastapi import FastAPI, HTTPException 
+from fastapi.middleware.cors import CORSMiddleware  # CORS para permitir peticiones desde el front-end
 from pydantic import BaseModel, EmailStr  # BaseModel = valida JSON, EmailStr = valida formato de email
 
 from db import get_conn  # get_conn() abre una conexión a PostgreSQL
 
 
 app = FastAPI(title="Mi API (CRUD sencillo)")  # crea la aplicación (servidor web)
+
+# Agregar CORS aquí:
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:5173", "http://127.0.0.1:5173"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 
 # Modelo para el BODY del POST (crear)

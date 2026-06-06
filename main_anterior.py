@@ -51,7 +51,7 @@ def actualizar_usuario(id: int, nombre: str):
 
 ########################################## DELETE ###################################################################
 @app.delete("/usuarios/{id}")
-def eÃ±iminar_usuario(id: int):
+def eliminar_usuario(id: int):
     return {"mensaje": f"usuario {id} eliminado"}
 
 

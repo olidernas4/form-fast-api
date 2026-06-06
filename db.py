@@ -1,7 +1,7 @@
 import os
 from contextlib import contextmanager
 
-import psycopg2
+import psycopg
 
 
 def _conn_params() -> dict:
@@ -20,14 +20,14 @@ def _conn_params() -> dict:
         "host": os.getenv("PGHOST", "localhost"),
         "port": int(os.getenv("PGPORT", "5432")),
         "user": os.getenv("PGUSER", "postgres"),
-        "password": os.getenv("PGPASSWORD", "postgres"),
+        "password": os.getenv("PGPASSWORD", "root"),
         "dbname": os.getenv("PGDATABASE", "mi_form_db"),
     }
 
 
 @contextmanager
 def get_conn():
-    conn = psycopg2.connect(**_conn_params())
+    conn = psycopg.connect(**_conn_params())
     try:
         yield conn
         conn.commit()
